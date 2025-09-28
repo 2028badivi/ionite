@@ -1,1 +1,5 @@
 
+pandas
+pygsheets
+google-auth
+requests
