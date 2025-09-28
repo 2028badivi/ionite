@@ -11,10 +11,10 @@ from google.oauth2.service_account import Credentials
 
 template_str = ""
 
-# 🔐 Load service account JSON from environment variable
+# 🔐 Load service account JSON from env var
 service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
 
-# ✅ Build credentials directly (bypassing pygsheets' old code)
+# ✅ Build credentials directly
 creds = Credentials.from_service_account_info(
     service_account_info,
     scopes=[
@@ -23,8 +23,8 @@ creds = Credentials.from_service_account_info(
     ]
 )
 
-# ✅ Authorize pygsheets with explicit credentials
-client = pygsheets.authorize(custom_credentials=creds)
+# ✅ Force pygsheets to use ONLY these creds
+client = pygsheets.Client(creds)   # ← instead of .authorize()
 
 
 def mod(row: int):
