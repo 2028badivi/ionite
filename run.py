@@ -62,7 +62,7 @@ def send(sender_email, sender_password, recipient_email, subject, body):
 def post(thedate: str, theid: int, theblock: str) -> bool:
     def get_urls_by_date(data: dict, date: str) -> list:
         for item in data.get("results", []):
-            if item["date"] == date and item["block_letter"] == block:
+            if item["date"] == date and item["block_letter"] == theblock:
                 return item["url"]
 
     blocks_2025 = "https://ion.tjhsst.edu/api/blocks"
