@@ -1,18 +1,15 @@
+# api/index.py
+from flask import Flask, jsonify
 from run import run
 
-def handler(request):
+app = Flask(__name__)
+
+@app.route("/", methods=["GET"])
+def index():
     try:
         result = run()
         if result is None:
             result = {"success": True, "message": "Run completed"}
-        return {
-            "statusCode": 200,
-            "headers": {"Content-Type": "application/json"},
-            "body": result
-        }
+        return jsonify(result)
     except Exception as e:
-        return {
-            "statusCode": 500,
-            "headers": {"Content-Type": "application/json"},
-            "body": {"success": False, "error": str(e)}
-        }
+        return jsonify({"success": False, "error": str(e)}), 500
