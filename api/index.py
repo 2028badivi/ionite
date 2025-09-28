@@ -1,14 +1,18 @@
 from run import run
 
-def handler(request, response):
+def handler(request):
     try:
-        # run() prints stuff, but we'll also capture a return value
         result = run()
         if result is None:
             result = {"success": True, "message": "Run completed"}
-        return response.json(result)
+        return {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": result
+        }
     except Exception as e:
-        return response.json({
-            "success": False,
-            "error": str(e)
-        })
+        return {
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": {"success": False, "error": str(e)}
+        }
