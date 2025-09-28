@@ -90,31 +90,67 @@ def post(thedate: str, theid: int, theblock: str) -> bool:
         return spots_available > 0
     return False
 
-def run():
+# def run():
     
-    # if "GOOGLE_SERVICE_ACCOUNT_JSON" not in os.environ:
-    #     raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON in environment!")
+#     # if "GOOGLE_SERVICE_ACCOUNT_JSON" not in os.environ:
+#     #     raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON in environment!")
     
-    # service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
-    # client = pygsheets.authorize(service_account_info=service_account_info)
+#     # service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
+#     # client = pygsheets.authorize(service_account_info=service_account_info)
 
-    # if your sheet URL is fixed, hardcode here
+#     # if your sheet URL is fixed, hardcode here
+#     df = gsheet_to_df("https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing")
+    
+
+#     for index, row in df.iterrows():
+#         if row['D'] == 1:
+#             status = post(row['C'], str(row['A']), row['B'])
+#             if is_not_in_past(row['C']):
+#                 mod(index+1)
+#             elif status:
+#                 send(
+#                     sender_email=os.environ.get("SENDER_EMAIL"),
+#                     sender_password=os.environ.get("SENDER_PASSWORD"),
+#                     recipient_email=os.environ.get("RECIPIENT_EMAIL"),
+#                     subject="IONITE - Spot Available!",
+#                     body=f"{template_str}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}"
+#                 )
+#                 mod(index+1)
+#     print("Operation Success")
+#     return {"success": True}
+
+
+def run():
     df = gsheet_to_df("https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing")
     
+    results = []  # 👈 collect logs per row
 
     for index, row in df.iterrows():
-        if row['D'] == 1:
-            status = post(row['C'], str(row['A']), row['B'])
-            if is_not_in_past(row['C']):
-                mod(index+1)
-            elif status:
-                send(
-                    sender_email=os.environ.get("SENDER_EMAIL"),
-                    sender_password=os.environ.get("SENDER_PASSWORD"),
-                    recipient_email=os.environ.get("RECIPIENT_EMAIL"),
-                    subject="IONITE - Spot Available!",
-                    body=f"{template_str}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}"
-                )
-                mod(index+1)
+        row_result = {"row": index+1, "id": row['A'], "block": row['B'], "date": row['C'], "action": None}
+        try:
+            if row['D'] == 1:
+                status = post(row['C'], str(row['A']), row['B'])
+                if is_not_in_past(row['C']):
+                    mod(index+1)
+                    row_result["action"] = "marked past"
+                elif status:
+                    send(
+                        sender_email=os.environ.get("SENDER_EMAIL"),
+                        sender_password=os.environ.get("SENDER_PASSWORD"),
+                        recipient_email=os.environ.get("RECIPIENT_EMAIL"),
+                        subject="IONITE - Spot Available!",
+                        body=f"{template_str}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}"
+                    )
+                    mod(index+1)
+                    row_result["action"] = "email sent"
+                else:
+                    row_result["action"] = "no spots"
+            else:
+                row_result["action"] = "skipped"
+        except Exception as e:
+            row_result["action"] = f"error: {e}"
+
+        results.append(row_result)
+
     print("Operation Success")
-    return {"success": True}
+    return {"success": True, "details": results}
