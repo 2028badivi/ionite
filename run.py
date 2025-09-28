@@ -11,12 +11,6 @@ template_str = ""
 print("🔍 GOOGLE_SERVICE_ACCOUNT_JSON (first 200 chars):")
 print(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"][:200])
 
-if "GOOGLE_SERVICE_ACCOUNT_JSON" not in os.environ:
-    raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON in environment!")
-
-service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
-client = pygsheets.authorize(service_account_info=service_account_info)
-
 def mod(row: int):
     spreadsht = client.open("IONITE")
     worksht = spreadsht.worksheet("title", "Sheet1")
@@ -85,6 +79,13 @@ def post(thedate: str, theid: int, theblock: str) -> bool:
     return False
 
 def run():
+    
+    if "GOOGLE_SERVICE_ACCOUNT_JSON" not in os.environ:
+        raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON in environment!")
+    
+    service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
+    client = pygsheets.authorize(service_account_info=service_account_info)
+
     # if your sheet URL is fixed, hardcode here
     gsheet_to_csv("YOUR_SHEET_URL", "my_data.csv")
     df = pd.read_csv('my_data.csv', names=list('ABCD'), header=None)
