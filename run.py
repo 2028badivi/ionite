@@ -100,7 +100,7 @@ def run():
     # client = pygsheets.authorize(service_account_info=service_account_info)
 
     # if your sheet URL is fixed, hardcode here
-    gsheet_to_csv("YOUR_SHEET_URL", "my_data.csv")
+    gsheet_to_csv("https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing", "my_data.csv")
     df = pd.read_csv('my_data.csv', names=list('ABCD'), header=None)
 
     for index, row in df.iterrows():
