@@ -11,20 +11,16 @@ from google.oauth2.service_account import Credentials
 
 template_str = ""
 
-# 🔐 Load service account JSON from env var
+
+# Load service account JSON from env var
 service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
+creds = Credentials.from_service_account_info(service_account_info, scopes=[
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+])
 
-# ✅ Build credentials directly
-creds = Credentials.from_service_account_info(
-    service_account_info,
-    scopes=[
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive"
-    ]
-)
-
-# ✅ Force pygsheets to use ONLY these creds
-client = pygsheets.Client(creds)   # ← instead of .authorize()
+# Authorize pygsheets with explicit credentials
+client = pygsheets.authorize(custom_credentials=creds)
 
 
 def mod(row: int):
