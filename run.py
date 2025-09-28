@@ -24,7 +24,7 @@ creds = Credentials.from_service_account_info(
 )
 
 # ✅ Force pygsheets to use ONLY these creds
-client = pygsheets.client(creds)   # ← instead of .authorize()
+client = pygsheets.Client(creds)   # ← instead of .authorize()
 
 
 def mod(row: int):
