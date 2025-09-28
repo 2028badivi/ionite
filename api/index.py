@@ -1,13 +1,13 @@
-from flask import Flask, jsonify
 from run import run
+import json
 
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Flask app running ✅"
-
-@app.route("/run")
-def trigger_run():
-    result = run()
-    return jsonify(result)
+def handler(request, response):
+    """Vercel entrypoint for serverless function."""
+    try:
+        result = run()
+        response.status_code = 200
+        response.headers["Content-Type"] = "application/json"
+        response.body = json.dumps(result)
+    except Exception as e:
+        response.status_code = 500
+        response.body = json.dumps({"error": str(e)})
