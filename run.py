@@ -9,7 +9,9 @@ from email.message import EmailMessage
 
 template_str = ""
 
-# 🔐 Load service account JSON from environment variable
+if "GOOGLE_SERVICE_ACCOUNT_JSON" not in os.environ:
+    raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON in environment!")
+
 service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
 client = pygsheets.authorize(service_account_info=service_account_info)
 
