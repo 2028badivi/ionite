@@ -29,13 +29,17 @@ def mod(row: int):
     worksht = spreadsht.worksheet("title", "Sheet1")
     worksht.update_value(f'D{row}', '0')
 
-def gsheet_to_csv(sheet_url_or_id: str, output_filename: str = "output.csv"):
-    match = __import__("re").search(r"/d/([a-zA-Z0-9-_]+)", sheet_url_or_id)
+def gsheet_to_df(sheet_url_or_id: str):
+    import re
+    import pandas as pd
+
+    match = re.search(r"/d/([a-zA-Z0-9-_]+)", sheet_url_or_id)
     sheet_id = match.group(1) if match else sheet_url_or_id
     csv_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv"
-    df = pd.read_csv(csv_url)
-    df.to_csv(output_filename, index=False)
-    print(f"✅ Saved Google Sheet as {output_filename}")
+
+    # 👇 one-liner that avoids saving to a file
+    return pd.read_csv(csv_url)
+
 
 def is_not_in_past(date_string: str) -> bool:
     try:
@@ -100,8 +104,8 @@ def run():
     # client = pygsheets.authorize(service_account_info=service_account_info)
 
     # if your sheet URL is fixed, hardcode here
-    gsheet_to_csv("https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing", "my_data.csv")
-    df = pd.read_csv('my_data.csv', names=list('ABCD'), header=None)
+    df = gsheet_to_df("https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing")
+    
 
     for index, row in df.iterrows():
         if row['D'] == 1:
