@@ -24,7 +24,8 @@ client = pygsheets.authorize(custom_credentials=creds)
 
 
 def mod(row: int):
-    spreadsht = client.open("IONITE")
+    sheet_id = "15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0"
+    spreadsht = client.open_by_key(sheet_id)
     worksht = spreadsht.worksheet("title", "Sheet1")
     worksht.update_value(f'D{row}', '0')
 
