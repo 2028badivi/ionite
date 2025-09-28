@@ -1,11 +1,16 @@
 from flask import Flask
+import run   # your run.py logic
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def home():
-    return 'Hello, World!'
+    return "Hello, this is the home page!"
 
-@app.route('/about')
-def about():
-    return 'About'
+@app.route("/run")
+def run_script():
+    try:
+        result = run.main()
+        return f"Result: {result}"
+    except Exception as e:
+        return f"Error: {str(e)}", 500
