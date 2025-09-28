@@ -8,6 +8,8 @@ import smtplib
 from email.message import EmailMessage
 
 template_str = ""
+print("🔍 GOOGLE_SERVICE_ACCOUNT_JSON (first 200 chars):")
+print(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"][:200])
 
 if "GOOGLE_SERVICE_ACCOUNT_JSON" not in os.environ:
     raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON in environment!")
