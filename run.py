@@ -190,7 +190,7 @@ def run(
                         sender_password=os.environ.get("SENDER_PASSWORD"),
                         recipient_email=recipient_email,
                         subject="IONITE - Spot Available!",
-                        body=f"{template_str}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}"
+                        body=f"{template_str}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}\n\n Click here to sign up: {signup_link}"
                     )
                     mod(index+1)
                     row_result["action"] = "email sent"
