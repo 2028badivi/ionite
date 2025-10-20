@@ -10,6 +10,7 @@ import pygsheets
 from google.oauth2.service_account import Credentials
 
 template_str = ""
+signup_link = "" # ADD THIS LINE
 
 
 # Load service account JSON from env var
@@ -85,8 +86,10 @@ def post(thedate: str, theid: int, theblock: str) -> bool:
         count, capacity = roster.get("count", 0), roster.get("capacity", 0)
         spots_available = capacity - count
         global template_str
+        global signup_link
         template_str = f"Club '{activity.get('name')}' has {spots_available} spots (Filled: {count}, Capacity: {capacity})"
         print(template_str)
+        signup_link = activity.get('url')
         return spots_available > 0
     return False
 
@@ -113,7 +116,7 @@ def post(thedate: str, theid: int, theblock: str) -> bool:
 #                     sender_password=os.environ.get("SENDER_PASSWORD"),
 #                     recipient_email=os.environ.get("RECIPIENT_EMAIL"),
 #                     subject="IONITE - Spot Available!",
-#                     body=f"{template_str}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}"
+#                     body=f"{template_str}\n\nView signup: {signup_link}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}"
 #                 )
 #                 mod(index+1)
 #     print("Operation Success")
