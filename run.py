@@ -13,19 +13,20 @@ template_str = ""
 signup_link = "" # ADD THIS LINE
 
 
-# Load service account JSON from env var
+
 service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
 creds = Credentials.from_service_account_info(service_account_info, scopes=[
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive"
 ])
 
-# Authorize pygsheets with explicit credentials
+
 client = pygsheets.authorize(custom_credentials=creds)
 
 
 def mod(row: int):
-    sheet_id = "15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0"
+    sheet_id = os.environ["sheetid"]
+
     spreadsht = client.open_by_key(sheet_id)
     worksht = spreadsht.worksheet("title", "Sheet1")
     worksht.update_value(f'D{row}', '0')
@@ -93,78 +94,13 @@ def post(thedate: str, theid: int, theblock: str) -> bool:
         return spots_available > 0
     return False
 
-# def run():
-    
-#     # if "GOOGLE_SERVICE_ACCOUNT_JSON" not in os.environ:
-#     #     raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON in environment!")
-    
-#     # service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
-#     # client = pygsheets.authorize(service_account_info=service_account_info)
-
-#     # if your sheet URL is fixed, hardcode here
-#     df = gsheet_to_df("https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing")
-    
-
-#     for index, row in df.iterrows():
-#         if row['D'] == 1:
-#             status = post(row['C'], str(row['A']), row['B'])
-#             if is_not_in_past(row['C']):
-#                 mod(index+1)
-#             elif status:
-#                 send(
-#                     sender_email=os.environ.get("SENDER_EMAIL"),
-#                     sender_password=os.environ.get("SENDER_PASSWORD"),
-#                     recipient_email=os.environ.get("RECIPIENT_EMAIL"),
-#                     subject="IONITE - Spot Available!",
-#                     body=f"{template_str}\n\nView signup: {signup_link}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}"
-#                 )
-#                 mod(index+1)
-#     print("Operation Success")
-#     return {"success": True}
-
-
-# def run():
-#     df = gsheet_to_df("https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing")
-    
-#     results = []  # 👈 collect logs per row
-
-#     for index, row in df.iterrows():
-#         row_result = {"row": index+1, "id": row['A'], "block": row['B'], "date": row['C'], "action": None}
-#         try:
-#             if row['D'] == 1:
-#                 status = post(row['C'], str(row['A']), row['B'])
-#                 if is_not_in_past(row['C']):
-#                     mod(index+1)
-#                     row_result["action"] = "marked past"
-#                 elif status:
-#                     send(
-#                         sender_email=os.environ.get("SENDER_EMAIL"),
-#                         sender_password=os.environ.get("SENDER_PASSWORD"),
-#                         recipient_email=os.environ.get("RECIPIENT_EMAIL"),
-#                         subject="IONITE - Spot Available!",
-#                         body=f"{template_str}\n\nLog: {index+1}, ID: {row['A']}, Block: {row['B']}, Date: {row['C']}, Status: {status}"
-#                     )
-#                     mod(index+1)
-#                     row_result["action"] = "email sent"
-#                 else:
-#                     row_result["action"] = "no spots"
-#             else:
-#                 row_result["action"] = "skipped"
-#         except Exception as e:
-#             row_result["action"] = f"error: {e}"
-
-#         results.append(row_result)
-
-#     print("Operation Success")
-#     return {"success": True, "details": results}
-
 
 def run(
     spreadsheet_url: str = None,
     recipient_email: str = None
 ):
     # Fallbacks (your defaults)
-    spreadsheet_url = spreadsheet_url or "https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing"
+    spreadsheet_url = spreadsheet_url or f"https://docs.google.com/spreadsheets/d/{os.environ["sheetid"]}/edit?usp=sharing"
     recipient_email = recipient_email or os.environ.get("RECIPIENT_EMAIL")
 
     df = gsheet_to_df(spreadsheet_url)
