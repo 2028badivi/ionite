@@ -9,7 +9,6 @@ def index_get():
     try:
         result = run(
             spreadsheet_url=os.environ.get("spreadsheet"),
-            # spreadsheet_url="https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing",
             recipient_email=os.environ.get("RECIPIENT_EMAIL")
         )
         return jsonify({"success": True, "result": str(result)})
