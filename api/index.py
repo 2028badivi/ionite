@@ -3,20 +3,21 @@ from run import run
 import os
 app = Flask(__name__)
 
-# Old behavior (uses defaults hardcoded in run.py or env)
+
 @app.route("/", methods=["GET"])
 def index_get():
     try:
         result = run(
-            spreadsheet_url="https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing",
-            recipient_email=os.environ.get("RECIPIENT_EMAIL")  # default from env
+            spreadsheet_url=os.environ.get("spreadsheet"),
+            # spreadsheet_url="https://docs.google.com/spreadsheets/d/15ozBzfMIiUXrjuABo_pzlPQ-YaSYcTI_yZlJsDNoQM0/edit?usp=sharing",
+            recipient_email=os.environ.get("RECIPIENT_EMAIL")
         )
         return jsonify({"success": True, "result": str(result)})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-# New behavior (friend provides headers)
+
 @app.route("/", methods=["POST"])
 def index_post():
     try:
