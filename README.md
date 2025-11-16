@@ -1,6 +1,7 @@
 # IONITE: TJHSST CLUB SPOT CHECKER
 
 Powered by Flask + Vercel + Google Sheets + TJHSST INTRANET-ION API
+Developed by Bhavesh Adivi
 
 This experimental club spot checker is a side-project of mine that checks periodically if a club spot is available. The endpoint uses Flask 3 on Vercel with Serverless Functions using the Python Runtime.
 [Python Runtime](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python).
