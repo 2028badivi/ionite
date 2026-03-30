@@ -13,7 +13,7 @@ https://flask-python-template.vercel.app/
 
 ## PUBLIC ENDPOINT:
 
-Access to the public IONITE Flask endpoint is currently restricted.
+Access to the public IONITE Flask endpoint is currently restricted due to serverless function runtime limitations on the free plan.
 
 
 ## How it Works
