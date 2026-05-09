@@ -1,6 +1,6 @@
-# IONITE: TJHSST CLUB SPOT CHECKER
+# IONITE: TJHSST Club Spot Checker
 
-Powered by Flask + Vercel + Google Sheets + TJHSST INTRANET-ION API
+Powered by Flask + Vercel + Python + Cron Scheduling + Google Sheets + TJHSST Intranet-IONv3 API
 
 Developed by Bhavesh Adivi
 
