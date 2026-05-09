@@ -20,6 +20,8 @@ Access to the public IONITE Flask endpoint is currently restricted due to server
 
 This example uses the Web Server Gateway Interface (WSGI) with Flask to enable handling requests on Vercel with Serverless Functions.
 
+I set up a cron job to ping this url occassionally and parse output JSON to send an email directly to my inbox if there is an open spot available for a club that I am interested in attending. Honestly, I made this because one club that I really wanted to go to was very popular and people were signing up quickly so I wanted to be notified ASAP if anyone opened their spot. 
+
 ## Running Flask Locally
 
 ```bash
