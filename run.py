@@ -10,7 +10,7 @@ import pygsheets
 from google.oauth2.service_account import Credentials
 
 template_str = ""
-signup_link = "" # ADD THIS LINE
+signup_link = ""
 
 
 
